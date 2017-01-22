@@ -4,7 +4,7 @@
 #Repo Location: https://github.com/dawsonbotsford/swim
 #Date: 09-28-2015
 
-VERSION="0.4.0-prelaunch"
+VERSION="0.5.0-prelaunch"
 usrDir=/usr/local/bin
 
 function print_help() {
@@ -41,6 +41,26 @@ Report bugs to: https://github.com/dawsonbotsford/swim/issues
 Uninstall:
     swim uninstall
 "
+}
+
+function chalk(){
+    red='\033[00;31m'
+    green="\033[0;32m"
+    cyan="\033[0;36m"
+    gray="\033[0;37m"
+    blue="\033[0;34m"
+    yellow="\033[0;33m"
+    white="\033[m"
+    color=\$${1:-white}
+    # activate color passed as argument
+    echo -ne "`eval echo ${color}`"
+    # read stdin (pipe) and print from it:
+    cat
+    # Note: if instead of reading from the pipe, you wanted to print
+    # the additional parameters of the function, you could do:
+    # shift; echo $*
+    # back to normal (no color)
+    echo -ne "${NORMAL}"
 }
 
 #Print the current aliases available to swim with
