@@ -4,8 +4,49 @@
 #Repo Location: https://github.com/dawsonbotsford/swim
 #Date: 09-28-2015
 
+function chalk(){
+    red='\033[00;31m'
+    green="\033[0;32m"
+    cyan="\033[0;36m"
+    gray="\033[0;37m"
+    blue="\033[0;34m"
+    yellow="\033[0;33m"
+    white="\033[m"
+    color=\$${1:-white}
+    # activate color passed as argument
+    echo -ne "`eval echo ${color}`"
+    # read stdin (pipe) and print from it:
+    cat
+    # Note: if instead of reading from the pipe, you wanted to print
+    # the additional parameters of the function, you could do:
+    # shift; echo $*
+    # back to normal (no color)
+    echo -ne "${NORMAL}"
+}
+
 VERSION="0.5.0-prelaunch"
 usrDir=/usr/local/bin
+#If root's vimrc does not exist
+if test -e $HOME/.vimrc 2>/dev/null; then
+  printf "We could not find a .vimrc for you so we made one up!\n"
+  touch $HOME/.vimrc
+  printf "\"Swim example vimrc file
+set number" > $HOME/.vimrc
+else
+  printf "Looks like you already have a vimrc. Let's alias that to main\n\n" | chalk yellow
+fi
+
+#If swim directory does not exist
+if [ ! -d "$HOME/.swim" ]; then
+
+  mkdir -p $HOME/.swim
+  cp $HOME/.vimrc $HOME/.swim/main.vim
+
+  printf "calling \"swim add $HOME/.vimrc main\"\n"
+  swim add $HOME/.vimrc main
+
+  printf "\nInstall complete!\n\n" | chalk green
+fi
 
 function print_help() {
   printf "
@@ -43,25 +84,7 @@ Uninstall:
 "
 }
 
-function chalk(){
-    red='\033[00;31m'
-    green="\033[0;32m"
-    cyan="\033[0;36m"
-    gray="\033[0;37m"
-    blue="\033[0;34m"
-    yellow="\033[0;33m"
-    white="\033[m"
-    color=\$${1:-white}
-    # activate color passed as argument
-    echo -ne "`eval echo ${color}`"
-    # read stdin (pipe) and print from it:
-    cat
-    # Note: if instead of reading from the pipe, you wanted to print
-    # the additional parameters of the function, you could do:
-    # shift; echo $*
-    # back to normal (no color)
-    echo -ne "${NORMAL}"
-}
+
 
 #Print the current aliases available to swim with
 #Store as swimrc.<alias> files in $HOME/.swim
@@ -232,7 +255,7 @@ while [ $# -gt 0 ]; do
 
     update | install) printf "Old version: " && printf $VERSION | chalk bold red
       printf "Downloading swim from Github.com/dawsonbotsford/swim...\n" | chalk yellow
-      curl -o $usrDir/swim -s https://raw.githubusercontent.com/dawsonbotsford/swim/master/swim
+      curl -o $usrDir/swim -s https://raw.githubusercontent.com/iladin/swim/master/swim
       chmod +x $usrDir/swim
       printf "New version: " && swim version | chalk green
       exit;;
