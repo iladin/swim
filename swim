@@ -27,7 +27,7 @@ function chalk(){
 VERSION="0.5.0-prelaunch"
 usrDir=/usr/local/bin
 #If root's vimrc does not exist
-if test -e $HOME/.vimrc 2>/dev/null; then
+if ! test -e $HOME/.vimrc 2>/dev/null; then
   printf "We could not find a .vimrc for you so we made one up!\n"
   touch $HOME/.vimrc
   printf "\"Swim example vimrc file
